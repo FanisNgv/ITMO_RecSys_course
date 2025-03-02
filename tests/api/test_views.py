@@ -20,7 +20,7 @@ def test_get_reco_success(
     service_config: ServiceConfig,
 ) -> None:
     user_id = 123
-    path = GET_RECO_PATH.format(model_name="some_model", user_id=user_id)
+    path = GET_RECO_PATH.format(model_name="rec_model", user_id=user_id)
     with client:
         response = client.get(path)
     assert response.status_code == HTTPStatus.OK
@@ -30,12 +30,24 @@ def test_get_reco_success(
     assert all(isinstance(item_id, int) for item_id in response_json["items"])
 
 
-def test_get_reco_for_unknown_user(
-    client: TestClient,
-) -> None:
-    user_id = 10**10
-    path = GET_RECO_PATH.format(model_name="some_model", user_id=user_id)
+def test_not_existing_model(client: TestClient) -> None:
+    user_id = 123
+    non_existing_model = "non_existing_model"
+    path = GET_RECO_PATH.format(model_name=non_existing_model, user_id=user_id)
+    
     with client:
         response = client.get(path)
+    
     assert response.status_code == HTTPStatus.NOT_FOUND
-    assert response.json()["errors"][0]["error_key"] == "user_not_found"
+    
+    response_json = response.json()
+    
+    assert "errors" in response_json
+    
+    assert len(response_json["errors"]) > 0
+    
+    first_error = response_json["errors"][0]
+    assert first_error["error_key"] == "http_exception"
+    assert first_error["error_message"] == f"Model {non_existing_model} not found"
+
+
