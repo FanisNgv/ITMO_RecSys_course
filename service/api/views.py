@@ -1,14 +1,11 @@
 from typing import List
 
-from fastapi import APIRouter, FastAPI, Request, HTTPException, Depends, status
-from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-
+from fastapi import APIRouter, Depends, FastAPI, HTTPException, Request, status
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from pydantic import BaseModel
 
 from service.api.exceptions import UserNotFoundError
-
 from service.log import app_logger
-
 
 router = APIRouter()
 
