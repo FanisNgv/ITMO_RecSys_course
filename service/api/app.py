@@ -12,6 +12,7 @@ from .views import add_views
 
 __all__ = ("create_app",)
 
+
 def create_app(config: ServiceConfig) -> FastAPI:
     setup_logging(config)
 

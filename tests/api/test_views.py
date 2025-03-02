@@ -34,20 +34,18 @@ def test_not_existing_model(client: TestClient) -> None:
     user_id = 123
     non_existing_model = "non_existing_model"
     path = GET_RECO_PATH.format(model_name=non_existing_model, user_id=user_id)
-    
+
     with client:
         response = client.get(path)
-    
+
     assert response.status_code == HTTPStatus.NOT_FOUND
-    
+
     response_json = response.json()
-    
+
     assert "errors" in response_json
-    
+
     assert len(response_json["errors"]) > 0
-    
+
     first_error = response_json["errors"][0]
     assert first_error["error_key"] == "http_exception"
     assert first_error["error_message"] == f"Model {non_existing_model} not found"
-
-

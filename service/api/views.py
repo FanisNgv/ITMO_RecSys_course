@@ -13,11 +13,14 @@ security = HTTPBearer()
 
 ALLOWED_TOKENS = {"ne_boltai_etot_token"}
 
+
 class RecoResponse(BaseModel):
     user_id: int
     items: List[int]
 
+
 AVAILABLE_MODELS = ["rec_model"]
+
 
 def verify_token(credentials: HTTPAuthorizationCredentials = Depends(security)):
     token = credentials.credentials
@@ -42,12 +45,7 @@ async def health(token: str = Depends(verify_token)) -> str:
     tags=["Recommendations"],
     response_model=RecoResponse,
 )
-async def get_reco(
-    request: Request,
-    model_name: str,
-    user_id: int,
-    token: str = Depends(verify_token)
-) -> RecoResponse:
+async def get_reco(request: Request, model_name: str, user_id: int, token: str = Depends(verify_token)) -> RecoResponse:
     app_logger.info(f"Request for model: {model_name}, user_id: {user_id}")
 
     if model_name not in AVAILABLE_MODELS:
