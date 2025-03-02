@@ -14,7 +14,7 @@ def test_health(
     client: TestClient,
 ) -> None:
     with client:
-        response = client.get("/health", headers = AUTH_HEADERS)
+        response = client.get("/health", headers=AUTH_HEADERS)
     assert response.status_code == HTTPStatus.OK
 
 
@@ -25,7 +25,7 @@ def test_get_reco_success(
     user_id = 123
     path = GET_RECO_PATH.format(model_name="rec_model", user_id=user_id)
     with client:
-        response = client.get(path, headers = AUTH_HEADERS)
+        response = client.get(path, headers=AUTH_HEADERS)
     assert response.status_code == HTTPStatus.OK
     response_json = response.json()
     assert response_json["user_id"] == user_id
@@ -39,7 +39,7 @@ def test_not_existing_model(client: TestClient) -> None:
     path = GET_RECO_PATH.format(model_name=non_existing_model, user_id=user_id)
 
     with client:
-        response = client.get(path, headers = AUTH_HEADERS)
+        response = client.get(path, headers=AUTH_HEADERS)
 
     assert response.status_code == HTTPStatus.NOT_FOUND
 
@@ -53,6 +53,7 @@ def test_not_existing_model(client: TestClient) -> None:
     assert first_error["error_key"] == "http_exception"
     assert first_error["error_message"] == f"Model {non_existing_model} not found"
 
+
 def test_unauthorized(client: TestClient) -> None:
     user_id = 123
     path = GET_RECO_PATH.format(model_name="rec_model", user_id=user_id)
@@ -64,7 +65,7 @@ def test_unauthorized(client: TestClient) -> None:
 
     assert response.status_code == HTTPStatus.UNAUTHORIZED
     response_json = response.json()
-    
+
     with client:
         response = client.get(path, headers=invalid_headers)
 
